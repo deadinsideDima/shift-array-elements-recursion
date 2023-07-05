@@ -15,8 +15,45 @@ namespace ShiftArrayElements
         /// <exception cref="InvalidOperationException">direction array contains an element that is not <see cref="Direction.Left"/> or <see cref="Direction.Right"/>.</exception>
         public static int[] Shift(int[]? source, Direction[]? directions)
         {
-            // TODO #1. Implement the method using recursive local functions and Array.Copy method.
-            throw new NotImplementedException();
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source), "Source is null");
+            }
+
+            if (directions is null)
+            {
+                throw new ArgumentNullException(nameof(directions), "Directions are null");
+            }
+
+            if (directions.Length == 0)
+            {
+                return source;
+            }
+
+            if (directions[0] == Direction.Left)
+            {
+                int temp = source[0];
+                int[] tSourc = new int[source.Length];
+                Array.Copy(source, 1, tSourc, 0, source.Length - 1);
+                tSourc[tSourc.Length - 1] = temp;
+                Direction[] directionsTemp = new Direction[directions.Length - 1];
+                Array.Copy(directions, 1, directionsTemp, 0, directions.Length - 1);
+                return Shift(tSourc, directionsTemp);
+            }
+            else if (directions[0] == Direction.Right)
+            {
+                int temp = source[source.Length - 1];
+                int[] tempSource = new int[source.Length];
+                Array.Copy(source, 0, tempSource, 1, source.Length - 1);
+                tempSource[0] = temp;
+                Direction[] directionsTemp = new Direction[directions.Length - 1];
+                Array.Copy(directions, 1, directionsTemp, 0, directions.Length - 1);
+                return Shift(tempSource, directionsTemp);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Incorrect {directions} enum value.");
+            }
         }
     }
 }
